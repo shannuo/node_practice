@@ -6,7 +6,7 @@ var Type = require("../models/type.js");
 router.get('/', function(req, res, next) {
 	var user = req.session.user;
 	if(user)
-		res.render('main', { errMsg:'' });
+		res.render('main', { errMsg:'',type:'' });
 	else
 		res.redirect('/users');
 });
@@ -14,10 +14,12 @@ router.get('/', function(req, res, next) {
 router.post("/",function(req, res) {
     //获取form表单提交数据
     var type = req.body.type;
+	var income = req.body.income;
     var username = req.session.user.username;
     var Dtype = new Type({
       username : username,
-      type : type
+      type : type,
+	  income : income
     });
     //将类型存入数据库
 	console.log(Dtype);
@@ -29,18 +31,18 @@ router.post("/",function(req, res) {
       }
 
       if (err) {
-        res.render('main', {errMsg: err });
+        res.render('main', {errMsg: err,type:'' });
         return;
       }
 	
 	  Dtype.addType(function(err,result){
 		if(err){
-		  res.render('main', {errMsg: err });
+		  res.render('main', {errMsg: err,type:'' });
 		  return;
 		}
 		else
 		{
-		  res.render('main', {errMsg: '添加成功！' });  
+		  res.render('main', {errMsg: '添加成功！',type:'' });  
 			}
 	   });
 	});

@@ -9,6 +9,9 @@ var session = require('express-session');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var main = require('./routes/main');
+var showtype = require('./routes/showtype');
+var account = require('./routes/account');
+var showaccount = require('./routes/showaccount');
 
 var app = express();
 
@@ -27,14 +30,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ 
      secret: 'dhsjkas', 
      name: 'demo',   //这里的name值得是cookie的name，默认cookie的name是：connect.sid 
-     cookie: {maxAge: 80000 },  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期 
+     cookie: {maxAge: 60*60*60*24*7 },  //设置maxAge是一周，即一周后session和相应的cookie失效过期 
      resave: false, 
-     saveUninitialized: true, 
+     saveUninitialized: false, 
 }));
 
 app.use('/', index);
 app.use('/users', users);
 app.use('/main', main);
+app.use('/showtype', showtype);
+app.use('/account', account);
+app.use('/showaccount', showaccount);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

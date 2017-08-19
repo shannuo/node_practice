@@ -21,18 +21,20 @@ var Type = function(user)
 {
 	this.username = user.username;
 	this.type = user.type;
+	this.income = user.income;
 }
 
 Type.prototype.addType = function save(callback)
 {
 	var user = {
     username : this.username,
-    type : this.type
+    type : this.type,
+	income:this.income
   	};
 	console.log(user);
-	var INSERT_TYPE= "INSERT INTO TYPE (ID,NAME,USERNAME) VALUES (0,?,?)";
+	var INSERT_TYPE= "INSERT INTO TYPE (ID,NAME,USERNAME,TYPE) VALUES (0,?,?,?)";
 	pool.getConnection(function(err,connection){
-    connection.query(INSERT_TYPE,[user.type,user.username],function(err,result){
+    connection.query(INSERT_TYPE,[user.type,user.username,user.income],function(err,result){
       if(err){
         console.log("INSERT_TYPE Error: " + err.message);
         return;
@@ -47,12 +49,33 @@ Type.prototype.addType = function save(callback)
 Type.prototype.typeNum = function(callback) {
 	var user = {
     username : this.username,
-    type : this.type
+    type : this.type,
+	income:this.income
   	};
   	pool.getConnection(function(err,connection){
     console.log("getConnection");
-    var SELECT_NUM = "SELECT COUNT(1) AS num FROM TYPE WHERE USERNAME = ? AND NAME = ?";
-    connection.query(SELECT_NUM, [user.username,user.type], function (err, result) {
+    var SELECT_NUM = "SELECT COUNT(1) AS num FROM TYPE WHERE (USERNAME = ? OR USERNAME = 'shan') AND NAME = ? AND TYPE = ?";
+    connection.query(SELECT_NUM, [user.username,user.type,user.income], function (err, result) {
+      if (err) {
+        console.log("SELECT_NUM Error: " + err.message);
+        return;
+      }
+	  console.log(result);
+      connection.release();
+      callback(err,result);
+    });
+  });
+};
+
+//显示类型
+Type.prototype.showType = function(callback) {
+	var user = {
+    username : this.username
+  	};
+  	pool.getConnection(function(err,connection){
+    console.log("getConnection");
+    var SELECT_NUM = "SELECT * FROM TYPE WHERE USERNAME = ? OR USERNAME = 'shan'";
+    connection.query(SELECT_NUM, [user.username], function (err, result) {
       if (err) {
         console.log("SELECT_NUM Error: " + err.message);
         return;
