@@ -31,19 +31,19 @@ router.post("/",function(req, res) {
       }
 
       if (err) {
-        res.render('main', {errMsg: err,type:'' });
+        res.json(err);
         return;
       }
 	
 	  Dtype.addType(function(err,result){
 		if(err){
-		  res.render('main', {errMsg: err,type:'' });
+		  res.json(err);
 		  return;
 		}
 		else
 		{
-		  res.render('main', {errMsg: '添加成功！',type:'' });  
-			}
+		  res.json('添加成功'); 
+		}
 	   });
 	});
 });

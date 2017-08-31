@@ -21,20 +21,20 @@ router.post('/',function(req, res) {
         err = '用户名已存在';
       }
       if (err) {
-        res.render('index', {errMsg: err });
+        res.json(err);
         return;
       }
       newUser.userSave(function(err,result){
         if(err){
-          res.render('index', {errMsg: err });
+          res.json(err);
           return;
         }
         if(result.insertId > 0){
           res.locals.status = "success";
-          res.render('users', {errMsg:'您已注册成功，登陆开始使用吧' });
+          res.json('您已注册成功，登陆开始使用吧');
         }
         else{
-          res.render('index', {errMsg: err });
+          res.json(err);
         }
        });
     });
